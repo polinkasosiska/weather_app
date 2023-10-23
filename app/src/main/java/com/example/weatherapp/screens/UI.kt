@@ -48,7 +48,9 @@ fun ListItem() { //на основе его копируются все оста
                     bottom = 5.dp
                     )
             ){
-                Text(text = "12:00")
+                Text(text = "12:00",
+                    color = Color.White
+                )
                 Text(
                     text = "Sunny",
                     color = Color.White
