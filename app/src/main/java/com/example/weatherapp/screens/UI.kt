@@ -15,16 +15,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.weatherapp.data.WeatherModel
 import com.example.weatherapp.ui.theme.Pink41
 
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
-fun ListItem() { //на основе его копируются все остальные
+fun ListItem(item: WeatherModel) { //на основе его копируются все остальные, item это переменная пррост для обазначения
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -48,22 +48,22 @@ fun ListItem() { //на основе его копируются все оста
                     bottom = 5.dp
                     )
             ){
-                Text(text = "12:00",
+                Text(text = item.time, // времеЧко
                     color = Color.White
                 )
                 Text(
-                    text = "Sunny",
+                    text = item.condition,
                     color = Color.White
                 )
 
             }
             Text(
-                text = "25ºC",
+                text = item.currentTemp.ifEmpty {"${item.maxTemp}/${item.minTemp}"}, /// с помощью / показываем сразу два дня
                 color = Color.White,
                 style = TextStyle(fontSize = 25.sp)
             )
             AsyncImage(
-                model = "https://cdn.weatherapi.com/weather/64x64/day/116.png",
+                model = "https:${item.icon}", ///наша картиночка
                 contentDescription = "im5",
                 modifier = Modifier
                     .padding(
