@@ -19,6 +19,7 @@ import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -166,27 +167,29 @@ fun MainCard()
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabLayout(){
+fun TabLayout(daysList: MutableState<List<WeatherModel>>) {
     val tabList = listOf("HOURS", "DAYS")
     val pagerState = rememberPagerState() //состояние
-    val tabIndex = pagerState.currentPage //состояние для пенреключения страницы, грубо говоря индекс, которой ща октрыт
+    val tabIndex =
+        pagerState.currentPage //состояние для пенреключения страницы, грубо говоря индекс, которой ща октрыт
     val coroutineScope = rememberCoroutineScope() //состояние
 
     Column( ///конйтнер для выбора дней или часов потом
-    modifier = Modifier
-        .padding(start = 5.dp, end = 5.dp)
-        .clip(RoundedCornerShape(5.dp))
+        modifier = Modifier
+            .padding(start = 5.dp, end = 5.dp)
+            .clip(RoundedCornerShape(5.dp))
 
     ) {
-        TabRow(selectedTabIndex = tabIndex,
-            indicator = {pos ->
-                        TabRowDefaults.Indicator(
-                            Modifier.pagerTabIndicatorOffset(pagerState, pos)
-                        )
+        TabRow(
+            selectedTabIndex = tabIndex,
+            indicator = { pos ->
+                TabRowDefaults.Indicator(
+                    Modifier.pagerTabIndicatorOffset(pagerState, pos)
+                )
             },
             backgroundColor = Pink41,
             contentColor = Color.White
-            ) {
+        ) {
             tabList.forEachIndexed { index, text ->
                 Tab(
                     selected = false, ///не один из жлементов сейчас не выбран, поэтому фолс
@@ -195,7 +198,7 @@ fun TabLayout(){
                             pagerState.animateScrollToPage(index)
                         }
                     },
-                    text ={
+                    text = {
                         Text(text = text)
                     }
                 )
@@ -207,34 +210,12 @@ fun TabLayout(){
             state = pagerState, //сохранение состояния
             modifier = Modifier.weight(1.0f)
 
-        ) {
-            index -> ///какая страница сейчас открытиа передаем
+        ) { index -> ///какая страница сейчас открытиа передаем
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
-            ){
+            ) {
                 itemsIndexed(
-                    listOf(
-                        WeatherModel(
-                            "London", ///для часов
-                            "10:00",
-                            "25ºC",
-                            "Sunny",
-                            "//cdn.weatherapi.com/weather/64x64/day/176.png",
-                            "",
-                            "",
-                            ""
-                        ),
-                        WeatherModel( ///для дней
-                            "London",
-                            "26/07/2022",
-                            "",
-                            "Sunny",
-                            "//cdn.weatherapi.com/weather/64x64/day/176.png",
-                            "26º",
-                            "12º",
-                            "xdfghxdfthxfghxdft"
-                        )
-                    )
+                    daysList.value
                 ) { _, item ->
                     ListItem(item)
                 }
