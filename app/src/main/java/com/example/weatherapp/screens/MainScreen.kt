@@ -27,7 +27,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -40,13 +39,11 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
-@Preview (showBackground = true)  //позволяет нам видеть экран до сборки проекта
+////@Preview (showBackground = true)  //позволяет нам видеть экран до сборки проекта
 @Composable // элеиент экрана который отрисуется на экране
 
-fun MainCard()
+fun MainCard(currentDay: MutableState<WeatherModel>)
 {
-
-
     Column(
         modifier = Modifier
             ///.fillMaxSize()
@@ -87,7 +84,7 @@ fun MainCard()
                     )
                     {
                         Text( /// текст для примера , который слева// :)
-                            text = "20 Jun 2022 13:00",
+                            text = currentDay.value.time,
                             modifier = Modifier.padding(
                                 top = 8.dp,
                                 start = 8.dp
@@ -96,7 +93,7 @@ fun MainCard()
                             color = Color.White )
 
                         AsyncImage( //чтобы была картинка справа
-                            model = "https://cdn.weatherapi.com/weather/64x64/day/116.png",
+                            model = "https:" + currentDay.value.icon,
                             contentDescription = "im2",
                             modifier = Modifier
                                 .padding(
@@ -108,17 +105,17 @@ fun MainCard()
                 }
 
                 Text( /// текст для примера , который слева// :)
-                    text = "London",
+                    text = currentDay.value.city,
                     style = TextStyle(fontSize = 24.sp),
                     color = Color.White
                 )
                 Text(
-                    text = "23ºC",
+                    text = currentDay.value.currentTemp,
                     style = TextStyle(fontSize = 65.sp),
                     color = Color.White
                 )
                 Text(
-                    text = "Sunny",
+                    text = currentDay.value.condition,
                     style = TextStyle(fontSize = 16.sp),
                     color = Color.White
                 )
@@ -142,7 +139,7 @@ fun MainCard()
                                 )
                             }
                                 Text(
-                                    text = "23ºC/12ºC",
+                                    text = "${currentDay.value.maxTemp}ºC/${currentDay.value.minTemp}ºC",
                                     style = TextStyle(fontSize = 16.sp),
                                     color = Color.White
                                 )
@@ -167,7 +164,8 @@ fun MainCard()
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabLayout(daysList: MutableState<List<WeatherModel>>) {
+fun TabLayout(daysList: MutableState<List<WeatherModel>>,
+              currentDay:  MutableState<WeatherModel>) {
     val tabList = listOf("HOURS", "DAYS")
     val pagerState = rememberPagerState() //состояние
     val tabIndex =

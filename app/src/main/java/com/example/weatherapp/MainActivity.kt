@@ -38,7 +38,21 @@ class MainActivity : ComponentActivity() {
                     mutableStateOf(listOf<WeatherModel>())
                 }
 
-                getData("London", this, daysList)
+                ///обновление для самой большой карточки
+                val currentDay = remember {
+                    mutableStateOf(WeatherModel(
+                        "",
+                        "",
+                        "0.0",
+                        "",
+                        "",
+                        "0.0",
+                        "0.0",
+                        ""
+                    )
+                    )
+                }
+                getData("London", this, daysList, currentDay)
 
                 Image(
                     painter = painterResource(
@@ -53,8 +67,8 @@ class MainActivity : ComponentActivity() {
                     contentScale = ContentScale.Crop
                 )
                 Column {
-                    MainCard()
-                    TabLayout(daysList)
+                    MainCard(currentDay)
+                    TabLayout(daysList, currentDay)
                 }
 
                     ////
@@ -68,7 +82,8 @@ class MainActivity : ComponentActivity() {
 
 ///функция для передачи названия города и днейеййй
 private fun getData(city: String, context: Context,
-                    daysList: MutableState<List<WeatherModel>>){
+                    daysList: MutableState<List<WeatherModel>>,
+                    currentDay: MutableState<WeatherModel>){
     //создание ссылки
     val url = "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY" +
             "&q=$city" +
@@ -87,6 +102,7 @@ private fun getData(city: String, context: Context,
                 response ->
            // Log.d("MyLog", "Response: $response")
             val list = getWeatherByDays(response)
+            currentDay.value = list[0] //передача нулевого дня
             daysList.value = list
         },
         {
