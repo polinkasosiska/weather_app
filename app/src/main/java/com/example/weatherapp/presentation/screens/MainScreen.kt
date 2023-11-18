@@ -1,4 +1,4 @@
-package com.example.weatherapp.screens
+package com.example.weatherapp.presentation.screens
 
 //import androidx.compose.material3.Card
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +19,6 @@ import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weatherapp.R
-import com.example.weatherapp.data.WeatherModel
+import com.example.weatherapp.presentation.model.WeatherModel
 import com.example.weatherapp.ui.theme.Pink41
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -42,7 +41,7 @@ import kotlinx.coroutines.launch
 ////@Preview (showBackground = true)  //позволяет нам видеть экран до сборки проекта
 @Composable // элеиент экрана который отрисуется на экране
 
-fun MainCard(currentDay: MutableState<WeatherModel>)
+fun MainCard(currentDay: WeatherModel)
 {
     Column(
         modifier = Modifier
@@ -84,7 +83,7 @@ fun MainCard(currentDay: MutableState<WeatherModel>)
                     )
                     {
                         Text( /// текст для примера , который слева// :)
-                            text = currentDay.value.time,
+                            text = currentDay.time,
                             modifier = Modifier.padding(
                                 top = 8.dp,
                                 start = 8.dp
@@ -93,7 +92,7 @@ fun MainCard(currentDay: MutableState<WeatherModel>)
                             color = Color.White )
 
                         AsyncImage( //чтобы была картинка справа
-                            model = "https:" + currentDay.value.icon,
+                            model = "https:" + currentDay.icon,
                             contentDescription = "im2",
                             modifier = Modifier
                                 .padding(
@@ -105,17 +104,17 @@ fun MainCard(currentDay: MutableState<WeatherModel>)
                 }
 
                 Text( /// текст для примера , который слева// :)
-                    text = currentDay.value.city,
+                    text = currentDay.city,
                     style = TextStyle(fontSize = 24.sp),
                     color = Color.White
                 )
                 Text(
-                    text = currentDay.value.currentTemp,
+                    text = currentDay.currentTemp,
                     style = TextStyle(fontSize = 65.sp),
                     color = Color.White
                 )
                 Text(
-                    text = currentDay.value.condition,
+                    text = currentDay.condition,
                     style = TextStyle(fontSize = 16.sp),
                     color = Color.White
                 )
@@ -139,7 +138,7 @@ fun MainCard(currentDay: MutableState<WeatherModel>)
                                 )
                             }
                                 Text(
-                                    text = "${currentDay.value.maxTemp}ºC/${currentDay.value.minTemp}ºC",
+                                    text = "${currentDay.maxTemp}ºC/${currentDay.minTemp}ºC",
                                     style = TextStyle(fontSize = 16.sp),
                                     color = Color.White
                                 )
@@ -164,8 +163,9 @@ fun MainCard(currentDay: MutableState<WeatherModel>)
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabLayout(daysList: MutableState<List<WeatherModel>>,
-              currentDay:  MutableState<WeatherModel>) {
+fun TabLayout(daysList: List<WeatherModel>,
+              currentDay: WeatherModel
+) {
     val tabList = listOf("HOURS", "DAYS")
     val pagerState = rememberPagerState() //состояние
     val tabIndex =
@@ -213,7 +213,7 @@ fun TabLayout(daysList: MutableState<List<WeatherModel>>,
                 modifier = Modifier.fillMaxSize()
             ) {
                 itemsIndexed(
-                    daysList.value
+                    daysList
                 ) { _, item ->
                     ListItem(item)
                 }
