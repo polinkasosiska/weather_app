@@ -1,7 +1,7 @@
 package com.example.weatherapp.data
 
-import com.example.weatherapp.domain.models.dto.WeatherResponse
-import com.example.weatherapp.presentation.model.WeatherModel
+import com.example.weatherapp.data.model.dto.WeatherResponse
+import com.example.weatherapp.domain.models.WeatherModel
 
 class ResponseToUIMapper {
 

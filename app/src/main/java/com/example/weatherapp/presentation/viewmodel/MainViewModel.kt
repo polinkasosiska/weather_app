@@ -13,15 +13,13 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.weatherapp.API_KEY
 import com.example.weatherapp.data.ResponseToUIMapper
-import com.example.weatherapp.domain.models.dto.WeatherResponse
-import com.example.weatherapp.presentation.model.WeatherModel
+import com.example.weatherapp.data.model.dto.WeatherResponse
 import com.example.weatherapp.presentation.model.MainUIState
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 class MainViewModel(val application: Application) : ViewModel() {
 
