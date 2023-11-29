@@ -15,21 +15,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.presentation.components.LoadingIndicator
 import com.example.weatherapp.presentation.screens.MainCard
 import com.example.weatherapp.presentation.screens.TabLayout
 import com.example.weatherapp.presentation.viewmodel.MainViewModel
 import com.example.weatherapp.ui.theme.WeatherAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    private val viewModel: MainViewModel by viewModels { MainViewModel.Factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             WeatherAppTheme { /// я сунула сюда ее из ui, так как иначе картинка перекрывает все контейнеры
                 //фон, который занимает весь экран
+                val viewModel = hiltViewModel<MainViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 viewModel.getData("London")
 

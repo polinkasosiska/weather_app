@@ -1,6 +1,9 @@
 package com.example.weatherapp.di
 
 import com.example.weatherapp.common.Constants.BASE_URL
+import com.example.weatherapp.data.api.WeatherApi
+import com.example.weatherapp.data.repository.WeatherRepositoryImpl
+import com.example.weatherapp.domain.repository.WeatherRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,4 +37,13 @@ object AppModule {
             .baseUrl(BASE_URL)
             .client(httpBuilder.build())
             .build()
+
+    @Provides
+    @Singleton
+    fun provideWeatherApi(retrofit: Retrofit): WeatherApi = retrofit.create(WeatherApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideRepository(weatherApi: WeatherApi) =
+        WeatherRepositoryImpl(weatherApi) as WeatherRepository
 }

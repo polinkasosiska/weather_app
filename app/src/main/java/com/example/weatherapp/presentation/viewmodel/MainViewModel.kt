@@ -1,81 +1,35 @@
 package com.example.weatherapp.presentation.viewmodel
 
-import android.app.Application
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.example.weatherapp.common.Constants.BASE_URL
-import com.example.weatherapp.data.ResponseToUIMapper
-import com.example.weatherapp.data.model.dto.WeatherResponse
+import com.example.weatherapp.common.Constants.API_KEY
+import com.example.weatherapp.data.mapper.WeatherResponseDTOMapper
+import com.example.weatherapp.domain.repository.WeatherRepository
 import com.example.weatherapp.presentation.model.MainUIState
-import com.google.gson.Gson
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(val application: Application) : ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(private val repository: WeatherRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUIState())
     val uiState = _uiState.asStateFlow()
 
     fun getData(city: String){
         _uiState.update { it.copy(isLoading = true) }
-        //создание ссылки
-        val url = BASE_URL +
-                "&q=$city" +
-                "&days=" +
-                "14" +
-                "&aqi=no&alerts=no"
-
-        Log.d("MyLog", url)
-
         viewModelScope.launch {
-            ////создание новой очереди очереди
-            val queue = Volley.newRequestQueue(application)
-
-            ////создание слушателя с помощью метода get
-            val sRequest = StringRequest(
-                Request.Method.GET,
-                url,
-                {
-                        response ->
-                    // Log.d("MyLog", "Response: $response")
-                    val list = ResponseToUIMapper().map(Gson().fromJson(response, WeatherResponse::class.java))
-                    _uiState.update { it.copy(daysList = list, currentDay = list[0], isLoading = false) }
-                    Log.d("MyLog", response)
-                },
-                {
-                    Log.d("MyLog", "VolleyError: $it")
-                }
-            )
-            ///добавление запроса в очередь
-            queue.add(sRequest)
-        }
-    }
-
-
-    // использовать потом для прокидывания репозитория
-    companion object {
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(
-                modelClass: Class<T>,
-                extras: CreationExtras
-            ): T {
-                // Get the Application object from extras
-                val application = checkNotNull(extras[APPLICATION_KEY])
-                // Create a SavedStateHandle for this ViewModel from extras
-                val savedStateHandle = extras.createSavedStateHandle()
-
-                return MainViewModel(application) as T
+            val response = repository.getWeather(API_KEY, city, 14)
+            if (response.isSuccessful && response.body() != null) {
+                val list = WeatherResponseDTOMapper().map(response.body()!!)
+                _uiState.update { it.copy(daysList = list, currentDay = list[0], isLoading = false) }
             }
         }
     }

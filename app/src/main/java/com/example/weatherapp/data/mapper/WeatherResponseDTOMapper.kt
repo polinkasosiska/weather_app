@@ -1,9 +1,9 @@
-package com.example.weatherapp.data
+package com.example.weatherapp.data.mapper
 
 import com.example.weatherapp.data.model.dto.WeatherResponse
 import com.example.weatherapp.domain.models.WeatherModel
 
-class ResponseToUIMapper {
+class WeatherResponseDTOMapper {
 
     fun map(input: WeatherResponse): List<WeatherModel> {
         val list = ArrayList<WeatherModel>()
