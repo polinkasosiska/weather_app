@@ -21,7 +21,6 @@ import com.example.weatherapp.presentation.screens.TabLayout
 import com.example.weatherapp.presentation.viewmodel.MainViewModel
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 
-const val API_KEY = "74da2efb93fc4c7788f222400232910"
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels { MainViewModel.Factory }

@@ -11,7 +11,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.weatherapp.API_KEY
+import com.example.weatherapp.common.Constants.BASE_URL
 import com.example.weatherapp.data.ResponseToUIMapper
 import com.example.weatherapp.data.model.dto.WeatherResponse
 import com.example.weatherapp.presentation.model.MainUIState
@@ -29,7 +29,7 @@ class MainViewModel(val application: Application) : ViewModel() {
     fun getData(city: String){
         _uiState.update { it.copy(isLoading = true) }
         //создание ссылки
-        val url = "https://api.weatherapi.com/v1/forecast.json?key=$API_KEY" +
+        val url = BASE_URL +
                 "&q=$city" +
                 "&days=" +
                 "14" +
