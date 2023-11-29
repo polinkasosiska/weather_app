@@ -7,10 +7,17 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
@@ -22,40 +29,52 @@ import com.example.weatherapp.presentation.screens.TabLayout
 import com.example.weatherapp.presentation.viewmodel.MainViewModel
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            WeatherAppTheme { /// я сунула сюда ее из ui, так как иначе картинка перекрывает все контейнеры
-                //фон, который занимает весь экран
-                val viewModel = hiltViewModel<MainViewModel>()
-                val uiState by viewModel.uiState.collectAsState()
-                viewModel.getData("London")
+            WeatherAppTheme {
+                val snackbarHostState = remember { SnackbarHostState() }
+                Scaffold(
+                    snackbarHost = {
+                        SnackbarHost(hostState = snackbarHostState)
+                    },
+                ) { contentPadding ->
+                    val viewModel = hiltViewModel<MainViewModel>()
+                    val uiState by viewModel.uiState.collectAsState()
+                    viewModel.getData("London")
 
-                Image(
-                    painter = painterResource(
-                        id = R.drawable.weather_bg
-                ),
-                    contentDescription = "im1",
-                    //чтобы картинка заняла весь экран
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .alpha(0.84f), ///alpha для прозрачности
-                    ///чтобы не было белых полей
-                    contentScale = ContentScale.Crop
-                )
-                Column {
-                    MainCard(uiState.currentDay)
-                    TabLayout(uiState.daysList, uiState.currentDay)
-                }
+                    Image(
+                        painter = painterResource(
+                            id = R.drawable.weather_bg
+                        ),
+                        contentDescription = "im1",
+                        //чтобы картинка заняла весь экран
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .alpha(0.84f)
+                            .padding(contentPadding), ///alpha для прозрачности
+                        ///чтобы не было белых полей
+                        contentScale = ContentScale.Crop
+                    )
+                    Column {
+                        MainCard(uiState.currentDay)
+                        TabLayout(uiState.daysList, uiState.currentDay)
+                    }
 
                     ////
 
-                if (uiState.isLoading) LoadingIndicator()
+                    if (uiState.isLoading) LoadingIndicator()
 
+                    LaunchedEffect(uiState.isError) {
+                        if (uiState.isError) snackbarHostState.showSnackbar("Ошибка!")
+                    }
+                }
             }
         }
     }

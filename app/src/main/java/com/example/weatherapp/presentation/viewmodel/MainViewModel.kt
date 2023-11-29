@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,10 +27,16 @@ class MainViewModel @Inject constructor(private val repository: WeatherRepositor
     fun getData(city: String){
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val response = repository.getWeather(API_KEY, city, 14)
-            if (response.isSuccessful && response.body() != null) {
-                val list = WeatherResponseDTOMapper().map(response.body()!!)
-                _uiState.update { it.copy(daysList = list, currentDay = list[0], isLoading = false) }
+            try {
+                val response = repository.getWeather(API_KEY, city, 14)
+                if (response.isSuccessful && response.body() != null) {
+                    val list = WeatherResponseDTOMapper().map(response.body()!!)
+                    _uiState.update { it.copy(daysList = list, currentDay = list[0], isLoading = false) }
+                } else {
+                    _uiState.update { it.copy(isLoading = false, isError = true) }
+                }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false, isError = true) }
             }
         }
     }
