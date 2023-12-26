@@ -2,4 +2,7 @@
     <string name="app_name">WeatherApp</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="use_current_location">Использовать текущее местоположение</string>
+    <string name="city">Город</string>
+    <string name="specify_city">Укажите город, в котором хотите посмотреть погоду</string>
 </resources>
