@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Text
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -31,7 +30,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.weatherapp.presentation.model.Screen
 import com.example.weatherapp.presentation.screens.SettingsScreen
 import com.example.weatherapp.presentation.screens.WeatherScreen
-import com.example.weatherapp.ui.theme.Purple40
 import com.example.weatherapp.ui.theme.Purple60
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,7 +37,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -61,7 +58,7 @@ class MainActivity : ComponentActivity() {
                                 BottomNavigationItem(
                                     icon = {
                                         Icon(
-                                            screen.icon,
+                                            imageVector = screen.icon,
                                             tint = if (selected) Purple60 else Color.White,
                                             contentDescription = null
                                         )

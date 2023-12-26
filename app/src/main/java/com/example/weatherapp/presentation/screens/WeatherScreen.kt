@@ -15,7 +15,7 @@ fun WeatherScreen(snackbarHostState: SnackbarHostState) {
     val viewModel = hiltViewModel<MainViewModel>()
 
     val uiState by viewModel.uiState.collectAsState()
-    viewModel.getData("London")
+    viewModel.getData()
     Column {
         MainCard(uiState.currentDay)
         TabLayout(uiState.daysList, uiState.currentDay)
