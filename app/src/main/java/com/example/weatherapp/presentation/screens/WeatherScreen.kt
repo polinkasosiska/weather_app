@@ -8,11 +8,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.presentation.components.LoadingIndicator
-import com.example.weatherapp.presentation.viewmodel.MainViewModel
+import com.example.weatherapp.presentation.viewmodel.WeatherViewModel
 
 @Composable
 fun WeatherScreen(snackbarHostState: SnackbarHostState) {
-    val viewModel = hiltViewModel<MainViewModel>()
+    val viewModel = hiltViewModel<WeatherViewModel>()
 
     val uiState by viewModel.uiState.collectAsState()
     viewModel.getData()

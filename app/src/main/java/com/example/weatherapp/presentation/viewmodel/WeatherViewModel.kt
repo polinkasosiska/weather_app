@@ -2,11 +2,7 @@ package com.example.weatherapp.presentation.viewmodel
 
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.weatherapp.App
 import com.example.weatherapp.common.Constants.API_KEY
 import com.example.weatherapp.common.dataStore
@@ -24,7 +20,7 @@ import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val repository: WeatherRepository) : ViewModel() {
+class WeatherViewModel @Inject constructor(private val repository: WeatherRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUIState())
     val uiState = _uiState.asStateFlow()
