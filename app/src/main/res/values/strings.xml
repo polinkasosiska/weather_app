@@ -7,4 +7,5 @@
     <string name="specify_city">Укажите город, в котором хотите посмотреть погоду</string>
     <string name="weather">Погода</string>
     <string name="settings">Настройки</string>
+    <string name="error_invalid_format">Неверный формат</string>
 </resources>
