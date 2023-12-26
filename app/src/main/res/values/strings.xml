@@ -5,4 +5,6 @@
     <string name="use_current_location">Использовать текущее местоположение</string>
     <string name="city">Город</string>
     <string name="specify_city">Укажите город, в котором хотите посмотреть погоду</string>
+    <string name="weather">Погода</string>
+    <string name="settings">Настройки</string>
 </resources>
