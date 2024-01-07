@@ -18,7 +18,7 @@ fun WeatherScreen(snackbarHostState: SnackbarHostState) {
     viewModel.getData()
     Column {
         MainCard(uiState.currentDay)
-        TabLayout(uiState.daysList, uiState.currentDay)
+        TabLayout(uiState.daysList, uiState.hoursList)
     }
 
     ////

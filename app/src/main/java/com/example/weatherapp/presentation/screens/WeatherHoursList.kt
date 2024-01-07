@@ -18,13 +18,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.weatherapp.domain.models.HourWeatherModel
 import com.example.weatherapp.domain.models.WeatherModel
 import com.example.weatherapp.ui.theme.Pink41
 
 
 //@Preview(showBackground = true)
 @Composable
-fun ListItem(item: WeatherModel) { //на основе его копируются все остальные, item это переменная пррост для обазначения
+fun WeatherHoursList(item: HourWeatherModel) { //на основе его копируются все остальные, item это переменная пррост для обазначения
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -48,7 +49,7 @@ fun ListItem(item: WeatherModel) { //на основе его копируютс
                     bottom = 5.dp
                     )
             ){
-                Text(text = item.date, // времеЧко
+                Text(text = item.time,
                     color = Color.White
                 )
                 Text(
@@ -58,7 +59,7 @@ fun ListItem(item: WeatherModel) { //на основе его копируютс
 
             }
             Text(
-                text = item.currentTemp.ifEmpty {"${item.maxTemp}/${item.minTemp}"}, /// с помощью / показываем сразу два дня
+                text = item.currentTemp,
                 color = Color.White,
                 style = TextStyle(fontSize = 25.sp)
             )
@@ -75,6 +76,4 @@ fun ListItem(item: WeatherModel) { //на основе его копируютс
         }
 
     }
-
-
 }

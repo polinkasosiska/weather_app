@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weatherapp.R
+import com.example.weatherapp.domain.models.HourWeatherModel
 import com.example.weatherapp.domain.models.WeatherModel
 import com.example.weatherapp.ui.theme.Pink41
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -163,9 +164,7 @@ fun MainCard(currentDay: WeatherModel)
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabLayout(daysList: List<WeatherModel>,
-              currentDay: WeatherModel
-) {
+fun TabLayout(daysList: List<WeatherModel>, hoursList: List<HourWeatherModel>) {
     val tabList = listOf("HOURS", "DAYS")
     val pagerState = rememberPagerState() //состояние
     val tabIndex =
@@ -207,15 +206,29 @@ fun TabLayout(daysList: List<WeatherModel>,
             count = tabList.size, //чтобы знать сколько страниц
             state = pagerState, //сохранение состояния
             modifier = Modifier.weight(1.0f)
-
         ) { index -> ///какая страница сейчас открытиа передаем
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                itemsIndexed(
-                    daysList
-                ) { _, item ->
-                    ListItem(item)
+            when(index) {
+                0 -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        itemsIndexed(
+                            hoursList
+                        ) { _, item ->
+                            WeatherHoursList(item)
+                        }
+                    }
+                }
+                1 -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        itemsIndexed(
+                            daysList
+                        ) { _, item ->
+                            WeatherDaysList(item)
+                        }
+                    }
                 }
             }
         }

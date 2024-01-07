@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.App
 import com.example.weatherapp.common.Constants.API_KEY
 import com.example.weatherapp.common.dataStore
+import com.example.weatherapp.data.mapper.HoursWeatherResponseDTOMapper
 import com.example.weatherapp.data.mapper.WeatherResponseDTOMapper
 import com.example.weatherapp.domain.repository.WeatherRepository
 import com.example.weatherapp.presentation.model.MainUIState
@@ -16,22 +17,21 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.text.SimpleDateFormat
-import java.time.temporal.ChronoUnit
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class WeatherViewModel @Inject constructor(private val repository: WeatherRepository) : ViewModel() {
+class WeatherViewModel @Inject constructor(private val repository: WeatherRepository) :
+    ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUIState())
     val uiState = _uiState.asStateFlow()
     val dateFormatIn = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     val dateFormatOut = SimpleDateFormat("dd MMMM", Locale.getDefault())
 
-    fun getData(){
+    fun getData() {
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             val city = App.instance.dataStore.data.map {
@@ -52,7 +52,16 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
                         it.date = dateFormatOut.format(itemDate ?: Date())
                         it
                     }
-                    _uiState.update { it.copy(daysList = list, currentDay = list[0], isLoading = false) }
+
+                    val hoursList = HoursWeatherResponseDTOMapper().map(response.body()!!)
+                    _uiState.update {
+                        it.copy(
+                            daysList = list,
+                            hoursList = hoursList,
+                            currentDay = list[0],
+                            isLoading = false
+                        )
+                    }
                 } else {
                     _uiState.update { it.copy(isLoading = false, isError = true) }
                 }
