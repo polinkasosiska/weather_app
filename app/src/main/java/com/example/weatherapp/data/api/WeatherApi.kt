@@ -10,6 +10,7 @@ interface WeatherApi {
     suspend fun getWeather(
         @Query("key") key: String,
         @Query("q") query: String,
-        @Query("days") days: Int
+        @Query("days") days: Int,
+        @Query("lang") lang: String
     ): Response<WeatherResponse>
 }

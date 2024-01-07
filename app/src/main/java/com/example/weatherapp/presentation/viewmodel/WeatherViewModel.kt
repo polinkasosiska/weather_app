@@ -17,6 +17,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.time.temporal.ChronoUnit
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +28,8 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
 
     private val _uiState = MutableStateFlow(MainUIState())
     val uiState = _uiState.asStateFlow()
+    val dateFormatIn = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val dateFormatOut = SimpleDateFormat("dd MMMM", Locale.getDefault())
 
     fun getData(){
         _uiState.update { it.copy(isLoading = true) }
@@ -32,9 +38,20 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
                 it[stringPreferencesKey("city_pref")] ?: "London"
             }.first()
             try {
-                val response = repository.getWeather(API_KEY, city, 14)
+                val response = repository.getWeather(API_KEY, city, 14, "ru")
                 if (response.isSuccessful && response.body() != null) {
-                    val list = WeatherResponseDTOMapper().map(response.body()!!)
+                    var list = WeatherResponseDTOMapper().map(response.body()!!)
+                    list = list.filter {
+                        val currentDateWithoutHoursStr = dateFormatIn.format(Date())
+                        val currentDateWithoutHours = dateFormatIn.parse(currentDateWithoutHoursStr)
+                        val itemDate = dateFormatIn.parse(it.date)
+                        itemDate?.equals(currentDateWithoutHours) == false
+                    }
+                    list = list.map {
+                        val itemDate = dateFormatIn.parse(it.date)
+                        it.date = dateFormatOut.format(itemDate ?: Date())
+                        it
+                    }
                     _uiState.update { it.copy(daysList = list, currentDay = list[0], isLoading = false) }
                 } else {
                     _uiState.update { it.copy(isLoading = false, isError = true) }

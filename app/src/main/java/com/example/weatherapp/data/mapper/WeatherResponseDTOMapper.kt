@@ -11,7 +11,7 @@ class WeatherResponseDTOMapper {
             list.add(
                 WeatherModel(
                     city = input.location.name,
-                    time = forecastDay.date,
+                    date = forecastDay.date,
                     currentTemp = "",
                     condition = forecastDay.day.condition.text,
                     icon = forecastDay.day.condition.icon,
@@ -22,7 +22,7 @@ class WeatherResponseDTOMapper {
             )
         }
         list[0] = list[0].copy(
-            time = input.current.lastUpdated,
+            date = input.current.lastUpdated,
             currentTemp = input.current.tempC.toString(),
         )
         return list

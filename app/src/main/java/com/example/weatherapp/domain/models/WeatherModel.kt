@@ -2,7 +2,7 @@ package com.example.weatherapp.domain.models
 
 data class WeatherModel(
     val city: String = "", //
-    val time: String = "", //
+    var date: String = "", //
     val currentTemp: String = "", // время паоследней ласт темпы
     val condition: String = "", // сдождь или ветер, чо  будет
     val icon: String = "", // фоточка

@@ -83,7 +83,7 @@ fun MainCard(currentDay: WeatherModel)
                     )
                     {
                         Text( /// текст для примера , который слева// :)
-                            text = currentDay.time,
+                            text = currentDay.date,
                             modifier = Modifier.padding(
                                 top = 8.dp,
                                 start = 8.dp

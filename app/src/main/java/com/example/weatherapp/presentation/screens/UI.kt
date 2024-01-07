@@ -48,7 +48,7 @@ fun ListItem(item: WeatherModel) { //на основе его копируютс
                     bottom = 5.dp
                     )
             ){
-                Text(text = item.time, // времеЧко
+                Text(text = item.date, // времеЧко
                     color = Color.White
                 )
                 Text(

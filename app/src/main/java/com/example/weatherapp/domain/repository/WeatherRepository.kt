@@ -8,6 +8,7 @@ interface WeatherRepository {
     suspend fun getWeather(
         key: String,
         query: String,
-        days: Int
+        days: Int,
+        lang: String
     ): Response<WeatherResponse>
 }

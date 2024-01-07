@@ -12,8 +12,9 @@ class WeatherRepositoryImpl(private val weatherApi: WeatherApi) :
     override suspend fun getWeather(
         key: String,
         query: String,
-        days: Int
+        days: Int,
+        lang: String
     ): Response<WeatherResponse> = withContext(Dispatchers.IO) {
-        weatherApi.getWeather(key, query, days)
+        weatherApi.getWeather(key, query, days, lang)
     }
 }
