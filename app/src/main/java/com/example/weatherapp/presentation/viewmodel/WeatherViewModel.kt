@@ -30,6 +30,8 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     val uiState = _uiState.asStateFlow()
     val dateFormatIn = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     val dateFormatOut = SimpleDateFormat("dd MMMM", Locale.getDefault())
+    val timeFormatIn = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+    val timeWithoutMinFormat = SimpleDateFormat("yyyy-MM-dd HH", Locale.getDefault())
 
     fun getData() {
         _uiState.update { it.copy(isLoading = true) }
@@ -41,6 +43,7 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
                 val response = repository.getWeather(API_KEY, city, 14, "ru")
                 if (response.isSuccessful && response.body() != null) {
                     var list = WeatherResponseDTOMapper().map(response.body()!!)
+                    val currentDay = list[0]
                     list = list.filter {
                         val currentDateWithoutHoursStr = dateFormatIn.format(Date())
                         val currentDateWithoutHours = dateFormatIn.parse(currentDateWithoutHoursStr)
@@ -53,12 +56,18 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
                         it
                     }
 
-                    val hoursList = HoursWeatherResponseDTOMapper().map(response.body()!!)
+                    var hoursList = HoursWeatherResponseDTOMapper().map(response.body()!!)
+                    hoursList = hoursList.filter {
+                        val itemTime = timeWithoutMinFormat.parse(it.time)
+                        val currentHourStr = timeWithoutMinFormat.format(Date())
+                        val currentHour = timeWithoutMinFormat.parse(currentHourStr)
+                        itemTime?.after(Date()) == true || itemTime?.equals(currentHour) == true
+                    }
                     _uiState.update {
                         it.copy(
                             daysList = list,
                             hoursList = hoursList,
-                            currentDay = list[0],
+                            currentDay = currentDay,
                             isLoading = false
                         )
                     }
