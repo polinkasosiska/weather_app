@@ -30,8 +30,9 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
     val uiState = _uiState.asStateFlow()
     val dateFormatIn = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     val dateFormatOut = SimpleDateFormat("dd MMMM", Locale.getDefault())
-    val timeFormatIn = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
     val timeWithoutMinFormat = SimpleDateFormat("yyyy-MM-dd HH", Locale.getDefault())
+    val timeFormatIn = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+    val timeFormatOut = SimpleDateFormat("HH:mm", Locale.getDefault())
 
     fun getData() {
         _uiState.update { it.copy(isLoading = true) }
@@ -62,6 +63,11 @@ class WeatherViewModel @Inject constructor(private val repository: WeatherReposi
                         val currentHourStr = timeWithoutMinFormat.format(Date())
                         val currentHour = timeWithoutMinFormat.parse(currentHourStr)
                         itemTime?.after(Date()) == true || itemTime?.equals(currentHour) == true
+                    }
+                    hoursList = hoursList.map {
+                        val itemTime = timeFormatIn.parse(it.time)
+                        it.time = timeFormatOut.format(itemTime ?: Date())
+                        it
                     }
                     _uiState.update {
                         it.copy(
